@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvix Teleconsult Recording - Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1400px;
+            overflow: hidden;
+            height: calc(100vh - 20px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .consult-id {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .header-title {
+            text-align: center;
+            flex: 1;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #666;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            border-right: 1px solid #e0e0e0;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .consult-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .consult-item {
+            padding: 12px 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .consult-item:hover {
+            border-color: #667eea;
+            background: #f9f9ff;
+        }
+
+        .consult-item.active {
+            border: 2px solid #667eea;
+            background: #f9f9ff;
+        }
+
+        .consult-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .consult-item-time {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Recording Area */
+        .recording-area {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recording-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .language-tabs {
+            display: flex;
+            gap: 0;
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .language-tab {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .language-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Recording Canvas */
+        .recording-canvas {
+            flex: 1;
+            background: linear-gradient(135deg, #43e0c7 0%, #3bb3a5 100%);
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .audio-status-area {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .audio-label {
+            color: white;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Primary Share Button */
+        .share-audio-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s;
+        }
+
+        .share-audio-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .share-audio-btn.active {
+            background: #10b981;
+            color: white;
+        }
+
+        .share-audio-btn .icon {
+            font-size: 16px;
+        }
+
+        /* Capture Status - positioned below audio label on the left */
+        .capture-status {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: white;
+            font-size: 12px;
+            width: fit-content;
+        }
+
+        .capture-status.visible {
+            display: flex;
+        }
+
+        .capture-status .dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .capture-status .change-btn {
+            margin-left: 8px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .capture-status .change-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Recording Controls */
+        .recording-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .control-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .control-btn.play {
+            background: white;
+            color: #43e0c7;
+        }
+
+        .control-btn.play:hover {
+            transform: scale(1.05);
+        }
+
+        .control-btn.stop {
+            background: white;
+            color: #ef4444;
+        }
+
+        .control-btn.stop:hover {
+            transform: scale(1.05);
+        }
+
+        /* Share Dropdown */
+        .share-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            width: 340px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            animation: dropdownSlideIn 0.15s ease-out;
+        }
+
+        .share-dropdown.visible {
+            display: block;
+        }
+
+        @keyframes dropdownSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Arrow pointer */
+        .share-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            transform: rotate(45deg);
+            box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .dropdown-body {
+            padding: 16px;
+            position: relative;
+        }
+
+        /* Button wrapper for dropdown positioning */
+        .share-btn-wrapper {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .share-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .share-option:hover {
+            border-color: #667eea;
+            background: #f9f9ff;
+        }
+
+        .share-option .option-icon {
+            width: 36px;
+            height: 36px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .share-option .option-content {
+            flex: 1;
+        }
+
+        .share-option .option-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 1px;
+        }
+
+        .share-option .option-desc {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .share-option .option-arrow {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        /* Chrome Picker Preview Image */
+        .picker-preview {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .picker-preview-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .picker-mockup {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 12px;
+            position: relative;
+        }
+
+        .picker-mockup-header {
+            color: white;
+            font-size: 11px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .picker-mockup-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+
+        .picker-mockup-tab {
+            padding: 6px 12px;
+            background: #404040;
+            border-radius: 4px;
+            font-size: 10px;
+            color: #aaa;
+        }
+
+        .picker-mockup-tab.active {
+            background: #505050;
+            color: white;
+        }
+
+        .picker-mockup-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: #3d5afe;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .picker-mockup-checkbox::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border: 2px solid #fbbf24;
+            border-radius: 8px;
+            animation: highlight-pulse 1.5s infinite;
+        }
+
+        @keyframes highlight-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .picker-mockup-checkbox input {
+            width: 14px;
+            height: 14px;
+            accent-color: white;
+        }
+
+        .picker-mockup-checkbox label {
+            font-size: 11px;
+            color: white;
+        }
+
+        .picker-arrow {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .picker-arrow-icon {
+            font-size: 16px;
+        }
+
+        .picker-arrow-text {
+            font-size: 10px;
+            color: #fbbf24;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Copy Link Button */
+        .copy-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-link-btn:hover {
+            background: #5568d3;
+        }
+
+        /* Test Panel */
+        .test-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 16px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            width: 200px;
+        }
+
+        .test-panel h4 {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .test-panel .env-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .test-btn {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .test-btn:hover {
+            border-color: #667eea;
+            background: #f9f9ff;
+        }
+
+        .test-btn:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">M</div>
+                <span class="consult-id">Consult ID W5-5</span>
+            </div>
+            <div class="header-title">CONSULT RECORDING</div>
+            <button class="close-btn">×</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="consult-list">
+                    <div class="consult-item">
+                        <div class="consult-item-header">
+                            <span>A5-4</span>
+                        </div>
+                        <div class="consult-item-time">4:22 PM · 27 Nov 2025</div>
+                    </div>
+                    <div class="consult-item active">
+                        <div class="consult-item-header">
+                            <span>W5-5</span>
+                        </div>
+                        <div class="consult-item-time">12:00 AM · 15 Jan 2026</div>
+                    </div>
+                    <div class="consult-item">
+                        <div class="consult-item-header">
+                            <span>A5-5</span>
+                        </div>
+                        <div class="consult-item-time">1:58 PM · 14 Nov 2025</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recording Area -->
+            <div class="recording-area">
+                <div class="recording-header">
+                    <div class="language-tabs">
+                        <button class="language-tab active">English</button>
+                        <button class="language-tab">Multilingual</button>
+                    </div>
+                    <div class="timer" id="timer">00:00</div>
+                </div>
+
+                <div class="recording-canvas">
+                    <!-- Audio Status Area (top-left) -->
+                    <div class="audio-status-area">
+                        <div class="audio-label" id="audioLabel">Microphone audio only</div>
+                        
+                        <!-- Capture Status (shown when sharing) -->
+                        <div class="capture-status" id="captureStatus">
+                            <span class="dot"></span>
+                            <span id="captureSource">Capturing: Google Meet</span>
+                            <button class="change-btn" onclick="toggleDropdown()">Change</button>
+                        </div>
+                    </div>
+
+                    <!-- Share Button Wrapper with Dropdown -->
+                    <div class="share-btn-wrapper">
+                        <!-- Primary Share Button -->
+                        <button class="share-audio-btn" id="shareBtn" onclick="toggleDropdown()">
+                            <span class="icon">🎙️</span>
+                            <span id="shareBtnText">Share Teleconsult Audio</span>
+                        </button>
+
+                        <!-- Share Dropdown -->
+                        <div class="share-dropdown" id="shareDropdown">
+                            <div class="dropdown-body" id="supportedContent">
+                                <div class="share-options">
+                                    <div class="share-option" onclick="shareTab()">
+                                        <div class="option-icon">📑</div>
+                                        <div class="option-content">
+                                            <div class="option-title">Share Tab</div>
+                                            <div class="option-desc">Best for Hilo, Google Meet, Doxy.me</div>
+                                        </div>
+                                        <span class="option-arrow">→</span>
+                                    </div>
+                                    
+                                    <div class="share-option" id="windowOption" onclick="shareWindow()">
+                                        <div class="option-icon">🪟</div>
+                                        <div class="option-content">
+                                            <div class="option-title">Share Window</div>
+                                            <div class="option-desc">For a specific app window</div>
+                                        </div>
+                                        <span class="option-arrow">→</span>
+                                    </div>
+                                    
+                                    <div class="share-option" id="screenOption" onclick="shareScreen()">
+                                        <div class="option-icon">🖥️</div>
+                                        <div class="option-content">
+                                            <div class="option-title">Share Entire Screen</div>
+                                            <div class="option-desc">For Zoom/Teams desktop apps</div>
+                                        </div>
+                                        <span class="option-arrow">→</span>
+                                    </div>
+                                </div>
+
+                                <!-- Chrome Picker Preview -->
+                                <div class="picker-preview">
+                                    <div class="picker-preview-label">Look for this checkbox:</div>
+                                    <div class="picker-mockup">
+                                        <div class="picker-mockup-header">Choose what to share</div>
+                                        <div class="picker-mockup-tabs">
+                                            <div class="picker-mockup-tab active">Chrome Tab</div>
+                                            <div class="picker-mockup-tab">Window</div>
+                                            <div class="picker-mockup-tab">Screen</div>
+                                        </div>
+                                        <div class="picker-mockup-checkbox">
+                                            <input type="checkbox" checked disabled>
+                                            <label>Also share tab audio</label>
+                                            <div class="picker-arrow">
+                                                <span class="picker-arrow-icon">👈</span>
+                                                <span class="picker-arrow-text">Check this!</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Unsupported Browser Content -->
+                            <div class="dropdown-body" id="unsupportedContent" style="display: none;">
+                                <div style="text-align: center; padding: 10px 0;">
+                                    <div style="font-size: 36px; margin-bottom: 12px;">⚠️</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px;">Browser Not Supported</div>
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 16px; line-height: 1.4;" id="unsupportedMessage">
+                                        Your browser cannot capture audio.<br>Use Chrome or Edge.
+                                    </div>
+                                    <button class="copy-link-btn" onclick="copyLink()" style="width: 100%;">
+                                        📋 Copy link for Chrome
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recording Controls -->
+                    <div class="recording-controls">
+                        <button class="control-btn play">▶</button>
+                        <button class="control-btn stop">⏹</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Panel -->
+    <div class="test-panel">
+        <h4>Test Scenarios</h4>
+        <div class="env-badge" id="envBadge">Detecting...</div>
+        <button class="test-btn" onclick="simulateBrowser('chrome-mac-sonoma')">Chrome Mac (Sonoma)</button>
+        <button class="test-btn" onclick="simulateBrowser('chrome-mac-ventura')">Chrome Mac (Ventura)</button>
+        <button class="test-btn" onclick="simulateBrowser('chrome-windows')">Chrome Windows</button>
+        <button class="test-btn" onclick="simulateBrowser('safari')">Safari</button>
+        <button class="test-btn" onclick="simulateBrowser('firefox')">Firefox</button>
+        <button class="test-btn" onclick="simulateCapture()">Simulate Capture</button>
+        <button class="test-btn" onclick="resetAll()">Reset</button>
+    </div>
+
+    <script>
+        // ========================================
+        // Browser & OS Detection
+        // ========================================
+        
+        function getTeleconsultCapability() {
+            const ua = navigator.userAgent;
+            
+            const isChrome = /Chrome/.test(ua) && !/Edg/.test(ua) && !/OPR/.test(ua);
+            const isEdge = /Edg/.test(ua);
+            const isFirefox = /Firefox/.test(ua);
+            const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+            
+            const isMac = /Macintosh/.test(ua);
+            const isWindows = /Windows/.test(ua);
+            const isMobile = /Android|iPhone|iPad|iPod/.test(ua);
+            
+            let macOSVersion = null;
+            let macOSName = null;
+            if (isMac) {
+                const match = ua.match(/Mac OS X (\d+)[._](\d+)/);
+                if (match) {
+                    const major = parseInt(match[1]);
+                    const minor = parseInt(match[2]);
+                    macOSVersion = major === 10 ? minor : major;
+                    const names = { 13: 'Ventura', 14: 'Sonoma', 15: 'Sequoia' };
+                    macOSName = names[macOSVersion] || (macOSVersion >= 14 ? 'Sonoma+' : 'Ventura-');
+                }
+            }
+
+            if (isMobile) {
+                return { supported: false, browser: 'mobile', os: 'mobile', message: 'Not available on mobile.' };
+            }
+
+            if (isFirefox) {
+                return { supported: false, browser: 'firefox', os: isMac ? 'mac' : 'windows', message: 'Firefox cannot capture audio. Use Chrome or Edge.' };
+            }
+
+            if (isSafari) {
+                return { supported: false, browser: 'safari', os: 'mac', macOSName, message: 'Safari cannot capture audio. Use Chrome or Edge.' };
+            }
+
+            if (isChrome || isEdge) {
+                const macHasSystemAudio = isMac && macOSVersion >= 14;
+                return {
+                    supported: true,
+                    browser: isChrome ? 'chrome' : 'edge',
+                    os: isMac ? 'mac' : 'windows',
+                    macOSName,
+                    systemAudio: isWindows || macHasSystemAudio
+                };
+            }
+
+            return { supported: false, browser: 'unknown', os: 'unknown', message: 'Browser not supported.' };
+        }
+
+        let simulatedCapability = null;
+        function getCapability() {
+            return simulatedCapability || getTeleconsultCapability();
+        }
+
+        // ========================================
+        // State
+        // ========================================
+        
+        let isCapturing = false;
+        let capturedStream = null;
+        let seconds = 0;
+        let timerInterval = null;
+
+        // ========================================
+        // Timer
+        // ========================================
+        
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                document.getElementById('timer').textContent = 
+                    `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // ========================================
+        // Dropdown
+        // ========================================
+        
+        function toggleDropdown() {
+            const dropdown = document.getElementById('shareDropdown');
+            const isVisible = dropdown.classList.contains('visible');
+            
+            if (isVisible) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        }
+
+        function openDropdown() {
+            const cap = getCapability();
+            const dropdown = document.getElementById('shareDropdown');
+            const supportedContent = document.getElementById('supportedContent');
+            const unsupportedContent = document.getElementById('unsupportedContent');
+            
+            if (cap.supported) {
+                supportedContent.style.display = 'block';
+                unsupportedContent.style.display = 'none';
+                
+                // Show/hide window and screen options based on system audio support
+                const windowOption = document.getElementById('windowOption');
+                const screenOption = document.getElementById('screenOption');
+                
+                if (cap.systemAudio) {
+                    windowOption.style.display = 'flex';
+                    screenOption.style.display = 'flex';
+                } else {
+                    windowOption.style.display = 'none';
+                    screenOption.style.display = 'none';
+                }
+            } else {
+                supportedContent.style.display = 'none';
+                unsupportedContent.style.display = 'block';
+                document.getElementById('unsupportedMessage').innerHTML = cap.message;
+            }
+            
+            dropdown.classList.add('visible');
+        }
+
+        function closeDropdown() {
+            document.getElementById('shareDropdown').classList.remove('visible');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('shareDropdown');
+            const wrapper = document.querySelector('.share-btn-wrapper');
+            const changeBtn = document.querySelector('.capture-status .change-btn');
+            const testPanel = document.querySelector('.test-panel');
+            
+            // Don't close if clicking inside wrapper, change button, or test panel
+            if (!wrapper.contains(e.target) && e.target !== changeBtn && !testPanel.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+
+        // ========================================
+        // Sharing Functions
+        // ========================================
+        
+        async function shareTab() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: true,
+                    audio: true,
+                    preferCurrentTab: false,
+                    selfBrowserSurface: 'exclude'
+                });
+                handleCapturedStream(stream, 'tab');
+            } catch (err) {
+                if (err.name !== 'NotAllowedError') {
+                    console.error('Error sharing tab:', err);
+                }
+            }
+        }
+
+        async function shareWindow() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { displaySurface: 'window' },
+                    audio: true,
+                    systemAudio: 'include'
+                });
+                handleCapturedStream(stream, 'window');
+            } catch (err) {
+                if (err.name !== 'NotAllowedError') {
+                    console.error('Error sharing window:', err);
+                }
+            }
+        }
+
+        async function shareScreen() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { displaySurface: 'monitor' },
+                    audio: true,
+                    systemAudio: 'include'
+                });
+                handleCapturedStream(stream, 'screen');
+            } catch (err) {
+                if (err.name !== 'NotAllowedError') {
+                    console.error('Error sharing screen:', err);
+                }
+            }
+        }
+
+        function handleCapturedStream(stream, type) {
+            const videoTrack = stream.getVideoTracks()[0];
+            let sourceName = videoTrack?.label || 'Unknown source';
+            
+            if (sourceName.includes('web-contents-media-stream://') || sourceName.length > 40) {
+                sourceName = type === 'tab' ? 'Browser Tab' : type === 'window' ? 'Application Window' : 'Screen';
+            }
+            
+            const hasAudio = stream.getAudioTracks().length > 0;
+            
+            capturedStream = stream;
+            isCapturing = true;
+            
+            updateCaptureUI(sourceName, hasAudio);
+            closeDropdown();
+        }
+
+        function updateCaptureUI(sourceName, hasAudio) {
+            const btn = document.getElementById('shareBtn');
+            const status = document.getElementById('captureStatus');
+            const label = document.getElementById('audioLabel');
+            
+            btn.classList.add('active');
+            btn.querySelector('#shareBtnText').textContent = 'Sharing Active';
+            
+            status.classList.add('visible');
+            document.getElementById('captureSource').textContent = `Capturing: ${sourceName}`;
+            
+            label.textContent = hasAudio ? 'Recording patient + microphone audio' : 'Recording microphone audio only';
+        }
+
+        function stopCapture() {
+            if (capturedStream) {
+                capturedStream.getTracks().forEach(track => track.stop());
+                capturedStream = null;
+            }
+            isCapturing = false;
+            
+            const btn = document.getElementById('shareBtn');
+            const status = document.getElementById('captureStatus');
+            const label = document.getElementById('audioLabel');
+            
+            btn.classList.remove('active');
+            btn.querySelector('#shareBtnText').textContent = 'Share Teleconsult Audio';
+            status.classList.remove('visible');
+            label.textContent = 'Microphone audio only';
+        }
+
+        // ========================================
+        // Utilities
+        // ========================================
+        
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                const btn = document.querySelector('.copy-link-btn');
+                btn.innerHTML = '✓ Link copied!';
+                setTimeout(() => {
+                    btn.innerHTML = '📋 Copy link to open in Chrome';
+                }, 2000);
+            });
+        }
+
+        function updateEnvBadge() {
+            const cap = getCapability();
+            const badge = document.getElementById('envBadge');
+            let text = cap.browser;
+            if (cap.os === 'mac' && cap.macOSName) {
+                text += ` / ${cap.macOSName}`;
+            } else if (cap.os) {
+                text += ` / ${cap.os}`;
+            }
+            badge.textContent = text;
+        }
+
+        // ========================================
+        // Test Functions
+        // ========================================
+        
+        function simulateBrowser(type) {
+            const caps = {
+                'chrome-mac-sonoma': { supported: true, browser: 'chrome', os: 'mac', macOSName: 'Sonoma', systemAudio: true },
+                'chrome-mac-ventura': { supported: true, browser: 'chrome', os: 'mac', macOSName: 'Ventura', systemAudio: false },
+                'chrome-windows': { supported: true, browser: 'chrome', os: 'windows', systemAudio: true },
+                'safari': { supported: false, browser: 'safari', os: 'mac', macOSName: 'Sonoma', message: 'Safari cannot capture audio. Use Chrome or Edge.' },
+                'firefox': { supported: false, browser: 'firefox', os: 'windows', message: 'Firefox cannot capture audio. Use Chrome or Edge.' }
+            };
+            simulatedCapability = caps[type];
+            updateEnvBadge();
+            openDropdown();
+        }
+
+        function simulateCapture() {
+            updateCaptureUI('Google Meet - Dr. Smith', true);
+        }
+
+        function resetAll() {
+            simulatedCapability = null;
+            stopCapture();
+            updateEnvBadge();
+            closeDropdown();
+        }
+
+        // ========================================
+        // Init
+        // ========================================
+        
+        function init() {
+            startTimer();
+            updateEnvBadge();
+        }
+
+        init();
+    </script>
+</body>
+</html>
