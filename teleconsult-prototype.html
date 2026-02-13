@@ -338,29 +338,174 @@
             transform: scale(1.05);
         }
 
-        /* Share Dropdown */
-        .share-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 8px;
+        /* Helper Panel */
+        .helper-panel {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            z-index: 2000;
+            max-width: 380px;
+        }
+
+        .helper-panel-content {
             background: white;
             border-radius: 12px;
-            width: 340px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 1000;
-            animation: dropdownSlideIn 0.15s ease-out;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            animation: panelSlideIn 0.2s ease-out;
         }
 
-        .share-dropdown.visible {
-            display: block;
-        }
-
-        @keyframes dropdownSlideIn {
+        @keyframes panelSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(-8px);
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .helper-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .helper-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .helper-close {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .helper-close:hover {
+            background: #e0e0e0;
+        }
+
+        .helper-body {
+            padding: 20px;
+        }
+
+        .helper-actions {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .helper-share-btn {
+            width: 100%;
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .helper-share-btn:hover {
+            background: #5568d3;
+        }
+
+        .helper-share-btn .icon {
+            font-size: 16px;
+        }
+
+        .helper-section {
+            margin-bottom: 20px;
+        }
+
+        .helper-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .helper-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .helper-option {
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .helper-option:last-child {
+            margin-bottom: 0;
+        }
+
+        .helper-option-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .helper-option-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Error Popup */
+        .error-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .error-popup {
+            background: white;
+            border-radius: 12px;
+            width: 480px;
+            max-width: 90vw;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: popupSlideIn 0.2s ease-out;
+        }
+
+        @keyframes popupSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
             }
             to {
                 opacity: 1;
@@ -368,22 +513,101 @@
             }
         }
 
-        /* Arrow pointer */
-        .share-dropdown::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            right: 20px;
-            width: 16px;
-            height: 16px;
-            background: white;
-            transform: rotate(45deg);
-            box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.05);
+        .error-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .dropdown-body {
-            padding: 16px;
-            position: relative;
+        .error-icon {
+            font-size: 24px;
+        }
+
+        .error-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .error-body {
+            padding: 20px 24px;
+        }
+
+        .error-body > p {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .error-reasons,
+        .error-suggestions {
+            margin-bottom: 16px;
+        }
+
+        .error-reasons:last-child,
+        .error-suggestions:last-child {
+            margin-bottom: 0;
+        }
+
+        .error-reasons p,
+        .error-suggestions p {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .error-reasons ul,
+        .error-suggestions ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .error-reasons li,
+        .error-suggestions li {
+            margin-bottom: 4px;
+        }
+
+        .error-actions {
+            padding: 16px 24px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .error-btn {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+
+        .error-btn.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .error-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .error-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .error-btn.primary:hover {
+            background: #5568d3;
         }
 
         /* Button wrapper for dropdown positioning */
@@ -686,84 +910,50 @@
                         <div class="capture-status" id="captureStatus">
                             <span class="dot"></span>
                             <span id="captureSource">Capturing: Google Meet</span>
-                            <button class="change-btn" onclick="toggleDropdown()">Change</button>
+                            <button class="change-btn" onclick="retryShare()">Change</button>
                         </div>
                     </div>
 
-                    <!-- Share Button Wrapper with Dropdown -->
+                    <!-- Share Button -->
                     <div class="share-btn-wrapper">
-                        <!-- Primary Share Button -->
-                        <button class="share-audio-btn" id="shareBtn" onclick="toggleDropdown()">
+                        <button class="share-audio-btn" id="shareBtn" onclick="initiateShare()">
                             <span class="icon">🎙️</span>
-                            <span id="shareBtnText">Share Teleconsult Audio</span>
+                            <span id="shareBtnText">Share with audio</span>
                         </button>
+                    </div>
 
-                        <!-- Share Dropdown -->
-                        <div class="share-dropdown" id="shareDropdown">
-                            <div class="dropdown-body" id="supportedContent">
-                                <div class="share-options">
-                                    <div class="share-option" onclick="shareTab()">
-                                        <div class="option-icon">📑</div>
-                                        <div class="option-content">
-                                            <div class="option-title">Share Tab</div>
-                                            <div class="option-desc">Best for Hilo, Google Meet, Doxy.me</div>
-                                        </div>
-                                        <span class="option-arrow">→</span>
-                                    </div>
-                                    
-                                    <div class="share-option" id="windowOption" onclick="shareWindow()">
-                                        <div class="option-icon">🪟</div>
-                                        <div class="option-content">
-                                            <div class="option-title">Share Window</div>
-                                            <div class="option-desc">For a specific app window</div>
-                                        </div>
-                                        <span class="option-arrow">→</span>
-                                    </div>
-                                    
-                                    <div class="share-option" id="screenOption" onclick="shareScreen()">
-                                        <div class="option-icon">🖥️</div>
-                                        <div class="option-content">
-                                            <div class="option-title">Share Entire Screen</div>
-                                            <div class="option-desc">For Zoom/Teams desktop apps</div>
-                                        </div>
-                                        <span class="option-arrow">→</span>
-                                    </div>
-                                </div>
+                    <!-- Helper Panel (shown when share dialog opens) -->
+                    <div class="helper-panel" id="helperPanel" style="display: none;">
+                        <div class="helper-panel-content">
+                            <div class="helper-header">
+                                <h3>Share options</h3>
+                                <button class="helper-close" onclick="closeHelperPanel()">×</button>
+                            </div>
+                            <div class="helper-body" id="helperBody">
+                                <!-- Content will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
 
-                                <!-- Chrome Picker Preview -->
-                                <div class="picker-preview">
-                                    <div class="picker-preview-label">Look for this checkbox:</div>
-                                    <div class="picker-mockup">
-                                        <div class="picker-mockup-header">Choose what to share</div>
-                                        <div class="picker-mockup-tabs">
-                                            <div class="picker-mockup-tab active">Chrome Tab</div>
-                                            <div class="picker-mockup-tab">Window</div>
-                                            <div class="picker-mockup-tab">Screen</div>
-                                        </div>
-                                        <div class="picker-mockup-checkbox">
-                                            <input type="checkbox" checked disabled>
-                                            <label>Also share tab audio</label>
-                                            <div class="picker-arrow">
-                                                <span class="picker-arrow-icon">👈</span>
-                                                <span class="picker-arrow-text">Check this!</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                    <!-- Error Popup (shown if no audio detected) -->
+                    <div class="error-popup-overlay" id="errorPopup" style="display: none;">
+                        <div class="error-popup">
+                            <div class="error-header">
+                                <span class="error-icon">⚠️</span>
+                                <h3>No audio detected</h3>
+                            </div>
+                            <div class="error-body">
+                                <p>No audio detected from your share.</p>
+                                <div class="error-suggestions">
+                                    <ul>
+                                        <li>Check that "Share audio" is enabled in the browser dialog</li>
+                                        <li>If sharing a window, try sharing a tab instead</li>
+                                        <li>Ensure your telehealth app is playing audio</li>
+                                    </ul>
                                 </div>
                             </div>
-
-                            <!-- Unsupported Browser Content -->
-                            <div class="dropdown-body" id="unsupportedContent" style="display: none;">
-                                <div style="text-align: center; padding: 10px 0;">
-                                    <div style="font-size: 36px; margin-bottom: 12px;">⚠️</div>
-                                    <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px;">Browser Not Supported</div>
-                                    <div style="font-size: 12px; color: #666; margin-bottom: 16px; line-height: 1.4;" id="unsupportedMessage">
-                                        Your browser cannot capture audio.<br>Use Chrome or Edge.
-                                    </div>
-                                    <button class="copy-link-btn" onclick="copyLink()" style="width: 100%;">
-                                        📋 Copy link for Chrome
-                                    </button>
-                                </div>
+                            <div class="error-actions">
+                                <button class="error-btn primary" onclick="retryShare()">Try again</button>
                             </div>
                         </div>
                     </div>
@@ -782,8 +972,7 @@
     <div class="test-panel">
         <h4>Test Scenarios</h4>
         <div class="env-badge" id="envBadge">Detecting...</div>
-        <button class="test-btn" onclick="simulateBrowser('chrome-mac-sonoma')">Chrome Mac (Sonoma)</button>
-        <button class="test-btn" onclick="simulateBrowser('chrome-mac-ventura')">Chrome Mac (Ventura)</button>
+        <button class="test-btn" onclick="simulateBrowser('chrome-mac')">Chrome Mac</button>
         <button class="test-btn" onclick="simulateBrowser('chrome-windows')">Chrome Windows</button>
         <button class="test-btn" onclick="simulateBrowser('safari')">Safari</button>
         <button class="test-btn" onclick="simulateBrowser('firefox')">Firefox</button>
@@ -876,123 +1065,149 @@
         }
 
         // ========================================
-        // Dropdown
+        // Helper Panel
         // ========================================
         
-        function toggleDropdown() {
-            const dropdown = document.getElementById('shareDropdown');
-            const isVisible = dropdown.classList.contains('visible');
-            
-            if (isVisible) {
-                closeDropdown();
-            } else {
-                openDropdown();
-            }
-        }
-
-        function openDropdown() {
+        function showHelperPanel() {
             const cap = getCapability();
-            const dropdown = document.getElementById('shareDropdown');
-            const supportedContent = document.getElementById('supportedContent');
-            const unsupportedContent = document.getElementById('unsupportedContent');
+            const panel = document.getElementById('helperPanel');
+            const body = document.getElementById('helperBody');
             
-            if (cap.supported) {
-                supportedContent.style.display = 'block';
-                unsupportedContent.style.display = 'none';
-                
-                // Show/hide window and screen options based on system audio support
-                const windowOption = document.getElementById('windowOption');
-                const screenOption = document.getElementById('screenOption');
-                
-                if (cap.systemAudio) {
-                    windowOption.style.display = 'flex';
-                    screenOption.style.display = 'flex';
-                } else {
-                    windowOption.style.display = 'none';
-                    screenOption.style.display = 'none';
-                }
-            } else {
-                supportedContent.style.display = 'none';
-                unsupportedContent.style.display = 'block';
-                document.getElementById('unsupportedMessage').innerHTML = cap.message;
+            if (!cap.supported) {
+                // Show unsupported message
+                body.innerHTML = `
+                    <div style="text-align: center; padding: 20px 0;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+                        <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 8px;">Browser Not Supported</div>
+                        <div style="font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.5;">
+                            ${cap.message}
+                        </div>
+                        <button class="copy-link-btn" onclick="copyLink()" style="width: 100%;">
+                            📋 Copy link for Chrome
+                        </button>
+                    </div>
+                `;
+                panel.style.display = 'block';
+                return;
             }
             
-            dropdown.classList.add('visible');
-        }
-
-        function closeDropdown() {
-            document.getElementById('shareDropdown').classList.remove('visible');
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            const dropdown = document.getElementById('shareDropdown');
-            const wrapper = document.querySelector('.share-btn-wrapper');
-            const changeBtn = document.querySelector('.capture-status .change-btn');
-            const testPanel = document.querySelector('.test-panel');
+            // Build browser-specific helper content
+            const browserName = cap.browser === 'chrome' ? 'Chrome' : cap.browser === 'edge' ? 'Edge' : 'Browser';
+            const isChrome = cap.browser === 'chrome';
+            const isEdge = cap.browser === 'edge';
             
-            // Don't close if clicking inside wrapper, change button, or test panel
-            if (!wrapper.contains(e.target) && e.target !== changeBtn && !testPanel.contains(e.target)) {
-                closeDropdown();
+            let pickerMockup = '';
+            if (isChrome || isEdge) {
+                pickerMockup = `
+                    <div class="picker-preview">
+                        <div class="picker-preview-label">Enable audio sharing:</div>
+                        <div class="picker-mockup">
+                            <div class="picker-mockup-header">Choose what to share</div>
+                            <div class="picker-mockup-tabs">
+                                <div class="picker-mockup-tab active">${browserName} Tab</div>
+                                <div class="picker-mockup-tab">Window</div>
+                                <div class="picker-mockup-tab">Screen</div>
+                            </div>
+                            <div class="picker-mockup-checkbox">
+                                <input type="checkbox" checked disabled>
+                                <label>Also share tab audio</label>
+                                <div class="picker-arrow">
+                                    <span class="picker-arrow-icon">👈</span>
+                                    <span class="picker-arrow-text">Required</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
             }
-        });
+            
+            body.innerHTML = `
+                <div class="helper-section">
+                    <div class="helper-option">
+                        <div class="helper-option-title">📑 Tab</div>
+                        <div class="helper-option-desc">Browser-based telehealth apps (Hilo, Google Meet, Doxy.me)</div>
+                    </div>
+                    <div class="helper-option">
+                        <div class="helper-option-title">🪟 Window</div>
+                        <div class="helper-option-desc">Specific application window</div>
+                    </div>
+                    <div class="helper-option">
+                        <div class="helper-option-title">🖥️ Entire Screen</div>
+                        <div class="helper-option-desc">Desktop apps (Zoom, Teams). Captures all system audio.</div>
+                    </div>
+                </div>
+                ${pickerMockup}
+                <div class="helper-actions">
+                    <button class="helper-share-btn" onclick="startBrowserShare()">
+                        <span class="icon">🎙️</span>
+                        Share
+                    </button>
+                </div>
+            `;
+            
+            panel.style.display = 'block';
+        }
+
+        function closeHelperPanel() {
+            document.getElementById('helperPanel').style.display = 'none';
+        }
 
         // ========================================
         // Sharing Functions
         // ========================================
         
-        async function shareTab() {
+        function initiateShare() {
+            // Just show the helper panel - user clicks Share button inside to proceed
+            showHelperPanel();
+        }
+
+        async function startBrowserShare() {
+            const cap = getCapability();
+            
+            // Check if browser is supported
+            if (!cap.supported) {
+                // Already showing unsupported message in helper panel
+                return;
+            }
+            
+            // Close helper panel before opening browser dialog
+            closeHelperPanel();
+            
             try {
+                // Request screen share - let browser show all available options
                 const stream = await navigator.mediaDevices.getDisplayMedia({
                     video: true,
                     audio: true,
-                    preferCurrentTab: false,
-                    selfBrowserSurface: 'exclude'
+                    preferCurrentTab: false
                 });
-                handleCapturedStream(stream, 'tab');
+                
+                // Handle the captured stream
+                handleCapturedStream(stream);
             } catch (err) {
-                if (err.name !== 'NotAllowedError') {
-                    console.error('Error sharing tab:', err);
+                if (err.name === 'NotAllowedError') {
+                    // User cancelled - do nothing
+                    console.log('User cancelled sharing');
+                } else {
+                    console.error('Error sharing:', err);
                 }
             }
         }
 
-        async function shareWindow() {
-            try {
-                const stream = await navigator.mediaDevices.getDisplayMedia({
-                    video: { displaySurface: 'window' },
-                    audio: true,
-                    systemAudio: 'include'
-                });
-                handleCapturedStream(stream, 'window');
-            } catch (err) {
-                if (err.name !== 'NotAllowedError') {
-                    console.error('Error sharing window:', err);
-                }
-            }
-        }
-
-        async function shareScreen() {
-            try {
-                const stream = await navigator.mediaDevices.getDisplayMedia({
-                    video: { displaySurface: 'monitor' },
-                    audio: true,
-                    systemAudio: 'include'
-                });
-                handleCapturedStream(stream, 'screen');
-            } catch (err) {
-                if (err.name !== 'NotAllowedError') {
-                    console.error('Error sharing screen:', err);
-                }
-            }
-        }
-
-        function handleCapturedStream(stream, type) {
+        function handleCapturedStream(stream) {
             const videoTrack = stream.getVideoTracks()[0];
             let sourceName = videoTrack?.label || 'Unknown source';
             
+            // Clean up technical stream IDs
             if (sourceName.includes('web-contents-media-stream://') || sourceName.length > 40) {
-                sourceName = type === 'tab' ? 'Browser Tab' : type === 'window' ? 'Application Window' : 'Screen';
+                // Try to determine type from track settings
+                const settings = videoTrack.getSettings();
+                if (settings.displaySurface === 'monitor') {
+                    sourceName = 'Entire Screen';
+                } else if (settings.displaySurface === 'window') {
+                    sourceName = 'Application Window';
+                } else {
+                    sourceName = 'Browser Tab';
+                }
             }
             
             const hasAudio = stream.getAudioTracks().length > 0;
@@ -1000,8 +1215,42 @@
             capturedStream = stream;
             isCapturing = true;
             
+            // Update UI immediately
             updateCaptureUI(sourceName, hasAudio);
-            closeDropdown();
+            
+            // Validate audio after a short delay to allow stream to initialize
+            setTimeout(() => {
+                validateAudio(stream, sourceName);
+            }, 1000);
+        }
+
+        function validateAudio(stream, sourceName) {
+            const audioTracks = stream.getAudioTracks();
+            const hasAudio = audioTracks.length > 0 && audioTracks[0].enabled && audioTracks[0].readyState === 'live';
+            
+            if (!hasAudio) {
+                // Show error popup
+                showErrorPopup(sourceName);
+            } else {
+                // Audio is good - ensure UI reflects this
+                const label = document.getElementById('audioLabel');
+                label.textContent = 'Recording patient + microphone audio';
+            }
+        }
+
+        function showErrorPopup(sourceName) {
+            document.getElementById('errorPopup').style.display = 'flex';
+        }
+
+        function closeErrorPopup() {
+            document.getElementById('errorPopup').style.display = 'none';
+        }
+
+        function retryShare() {
+            closeErrorPopup();
+            stopCapture();
+            // Show helper panel again so user can see instructions
+            initiateShare();
         }
 
         function updateCaptureUI(sourceName, hasAudio) {
@@ -1015,7 +1264,8 @@
             status.classList.add('visible');
             document.getElementById('captureSource').textContent = `Capturing: ${sourceName}`;
             
-            label.textContent = hasAudio ? 'Recording patient + microphone audio' : 'Recording microphone audio only';
+            // Audio status will be updated by validateAudio
+            label.textContent = 'Recording microphone audio only';
         }
 
         function stopCapture() {
@@ -1030,7 +1280,7 @@
             const label = document.getElementById('audioLabel');
             
             btn.classList.remove('active');
-            btn.querySelector('#shareBtnText').textContent = 'Share Teleconsult Audio';
+            btn.querySelector('#shareBtnText').textContent = 'Share with audio';
             status.classList.remove('visible');
             label.textContent = 'Microphone audio only';
         }
@@ -1067,27 +1317,61 @@
         
         function simulateBrowser(type) {
             const caps = {
-                'chrome-mac-sonoma': { supported: true, browser: 'chrome', os: 'mac', macOSName: 'Sonoma', systemAudio: true },
-                'chrome-mac-ventura': { supported: true, browser: 'chrome', os: 'mac', macOSName: 'Ventura', systemAudio: false },
+                'chrome-mac': { supported: true, browser: 'chrome', os: 'mac', macOSName: 'macOS', systemAudio: true },
                 'chrome-windows': { supported: true, browser: 'chrome', os: 'windows', systemAudio: true },
                 'safari': { supported: false, browser: 'safari', os: 'mac', macOSName: 'Sonoma', message: 'Safari cannot capture audio. Use Chrome or Edge.' },
                 'firefox': { supported: false, browser: 'firefox', os: 'windows', message: 'Firefox cannot capture audio. Use Chrome or Edge.' }
             };
             simulatedCapability = caps[type];
             updateEnvBadge();
-            openDropdown();
+            // Show helper panel to demonstrate browser-specific content
+            showHelperPanel();
         }
 
         function simulateCapture() {
-            updateCaptureUI('Google Meet - Dr. Smith', true);
+            // Simulate a successful capture with audio
+            const mockStream = {
+                getVideoTracks: () => [{ label: 'Google Meet - Dr. Smith', getSettings: () => ({ displaySurface: 'browser' }) }],
+                getAudioTracks: () => [{ enabled: true, readyState: 'live' }],
+                getTracks: () => []
+            };
+            handleCapturedStream(mockStream);
         }
 
         function resetAll() {
             simulatedCapability = null;
             stopCapture();
             updateEnvBadge();
-            closeDropdown();
+            closeHelperPanel();
+            closeErrorPopup();
         }
+
+        // ========================================
+        // Init
+        // ========================================
+        
+        // Close helper panel when clicking outside
+        document.addEventListener('click', function(e) {
+            const helperPanel = document.getElementById('helperPanel');
+            const helperContent = document.querySelector('.helper-panel-content');
+            const shareBtn = document.getElementById('shareBtn');
+            const testPanel = document.querySelector('.test-panel');
+            
+            // Close helper panel if clicking outside
+            if (helperPanel.style.display === 'block' && 
+                !helperContent.contains(e.target) && 
+                e.target !== shareBtn && 
+                !testPanel.contains(e.target)) {
+                closeHelperPanel();
+            }
+        });
+
+        // Close error popup when clicking overlay
+        document.getElementById('errorPopup').addEventListener('click', function(e) {
+            if (e.target.id === 'errorPopup') {
+                closeErrorPopup();
+            }
+        });
 
         // ========================================
         // Init
